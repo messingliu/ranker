@@ -1,0 +1,10 @@
+{
+  "namespace": "com.tantan.avro",
+  "type": "record",
+  "name": "ScoredEntity",
+  "fields": [
+    {"name": "id", "type": "long", "doc": "The id of the user"},
+    {"name": "score",  "type": "float", "doc": "The score of the id"},
+    {"name": "sourceModel",  "type": ["null", "string"], "default": null, "doc": "The model used for ranking"}
+  ]
+}
