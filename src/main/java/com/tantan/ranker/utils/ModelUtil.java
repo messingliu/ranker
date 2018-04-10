@@ -9,7 +9,7 @@ import java.util.Map;
 public class ModelUtil {
   private static final Logger LOGGER = LoggerFactory.getLogger(ModelUtil.class);
 
-  private static final String PARAMETER_SEPARATOR = "#";
+  private static final String PARAMETER_SEPARATOR = "!";
   private static final String KEY_VALUE_SEPARATOR = ":";
   public static Map<String, Double> parseModelParameter(String abTestSetting, Map<String, Double> defaultModel) {
     String[] parameters = abTestSetting.split(PARAMETER_SEPARATOR);

@@ -47,10 +47,8 @@ public class SuggestedUserRanker {
       }
     });
     List<Long> suggestedUserList = new ArrayList<>();
-    for(ScoredEntity scoredEntity: scoredEntityList) {
-      LOGGER.error("suggestedUserList " + scoredEntity.getId() + " " + scoredEntity.getScore());
-    }
     for (int i = 0; i < Math.min(topK, scoredEntityList.size()); i ++) {
+      LOGGER.info("suggestedUserList " + scoredEntityList.get(i).getId() + " " + scoredEntityList.get(i).getScore());
       suggestedUserList.add(scoredEntityList.get(i).getId());
     }
     return suggestedUserList;
