@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 
 import java.util.*;
@@ -63,6 +64,15 @@ public class SuggestedUserRanker {
     value[0] = new Double(candidateId);
     value[1] = 0.5;
     value[2] = new Double(1 -  candidateId * candidateId / LARGE_DISTANCE);
+    LOGGER.info("Start calling mock HBase at: " + System.currentTimeMillis());
+    mockService();
+    LOGGER.info("End calling mock HBase at: " + System.currentTimeMillis());
     return new FeatureVector<>(value, indexMap);
+  }
+
+  public void mockService() {
+    String url = "http://localhost:8010/mockDelay?delay=100";
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getForObject(url, String.class);
   }
 }
