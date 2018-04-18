@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class HBaseFeatureFecther {
     private static final Logger LOGGER = LoggerFactory.getLogger(HBaseFeatureFecther.class);
-    public static final String FEATURE_TABLE = "MyTable";
+    public static final String FEATURE_TABLE = "user_features";
 
     @Autowired
     private HbaseTemplate hbaseTemplate;
