@@ -18,7 +18,6 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-@Component
 public class HbaseTemplate implements HbaseOperations {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HbaseTemplate.class);

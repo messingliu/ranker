@@ -31,13 +31,20 @@ targetCompatibility = 1.8
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
-    compile 'org.springframework.kafka:spring-kafka:2.1.4.RELEASE'
-    compile 'org.springframework.boot:spring-boot-autoconfigure:1.5.6.RELEASE'
-    compile 'org.apache.avro:avro:1.8.1'
-    compile ("org.apache.hbase:hbase-client:1.4.3")
+            {
+        //exclude module: 'spring-boot-starter-logging'
+    }
+    compile ('org.springframework.kafka:spring-kafka:2.1.4.RELEASE')
+    compile ('org.springframework.boot:spring-boot-autoconfigure:2.0.0.RELEASE')
+    compile ('org.apache.avro:avro:1.8.1')
+    compile ("org.apache.hbase:hbase-client:1.4.3") {
+            exclude module: 'slf4j-log4j12'
+            exclude module: 'log4j'
+    }
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('com.jayway.jsonpath:json-path')
 }
+
 
 task generateAvro(type: com.commercehub.gradle.plugin.avro.GenerateAvroJavaTask) {
     source("src/main/resources/avro")
