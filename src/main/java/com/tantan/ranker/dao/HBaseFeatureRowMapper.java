@@ -15,8 +15,8 @@ public class HBaseFeatureRowMapper implements RowMapper<HBaseFeature> {
         HBaseFeature hBaseFeature = new HBaseFeature();
         String name = Bytes.toString(result.getValue(COLUMNFAMILY, NAME));
         int age = Bytes.toInt(result.getValue(COLUMNFAMILY, AGE));
-
         hBaseFeature.setAge(age);
+
         return hBaseFeature;
     }
 }

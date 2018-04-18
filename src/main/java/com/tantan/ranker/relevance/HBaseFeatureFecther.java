@@ -15,11 +15,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class HBaseFeatureFecther {
     private static final Logger LOGGER = LoggerFactory.getLogger(HBaseFeatureFecther.class);
+    public static final String FEATURE_TABLE = "MyTable";
 
     @Autowired
-    HbaseTemplate hbaseTemplate;
+    private HbaseTemplate hbaseTemplate;
+
     public HBaseFeature getHBaseFeature(String sessionId) {
-        HBaseFeature row = hbaseTemplate.get("MyTable", "SomeColumn", new HBaseFeatureRowMapper());
+        HBaseFeature row = hbaseTemplate.get(FEATURE_TABLE, sessionId, new HBaseFeatureRowMapper());
         return row;
     }
 }
