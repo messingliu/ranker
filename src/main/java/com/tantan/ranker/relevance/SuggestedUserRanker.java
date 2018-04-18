@@ -28,6 +28,9 @@ public class SuggestedUserRanker {
       scoredEntity.setSourceModel(String.valueOf(modelId));
       scoredEntityList.add(scoredEntity);
     }
+    LOGGER.info("Start calling mock HBase at: " + System.currentTimeMillis());
+    mockService();
+    LOGGER.info("End calling mock HBase at: " + System.currentTimeMillis());
     return rankSuggestedUsers(scoredEntityList, topK);
   }
 
@@ -64,9 +67,6 @@ public class SuggestedUserRanker {
     value[0] = new Double(candidateId);
     value[1] = 0.5;
     value[2] = new Double(1 -  candidateId * candidateId / LARGE_DISTANCE);
-    LOGGER.info("Start calling mock HBase at: " + System.currentTimeMillis());
-    mockService();
-    LOGGER.info("End calling mock HBase at: " + System.currentTimeMillis());
     return new FeatureVector<>(value, indexMap);
   }
 
