@@ -43,6 +43,7 @@ public class HbaseTemplate implements HbaseOperations {
             table = this.getConnection().getTable(TableName.valueOf(tableName));
             return action.doInTable(table);
         } catch (Throwable throwable) {
+            throwable.printStackTrace();
             throw new HbaseSystemException(throwable);
         } finally {
             if (null != table) {
@@ -188,7 +189,8 @@ public class HbaseTemplate implements HbaseOperations {
                         // init pool
                         poolExecutor.prestartCoreThread();
                         this.connection = ConnectionFactory.createConnection(configuration, poolExecutor);
-                    } catch (IOException e) {
+                    } catch (Exception e) {
+                        e.printStackTrace();
                         LOGGER.error("Failed in creating hbase connection");
                     }
                 }
