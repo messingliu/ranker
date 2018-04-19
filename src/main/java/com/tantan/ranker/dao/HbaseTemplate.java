@@ -1,5 +1,6 @@
 package com.tantan.ranker.dao;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.TableName;
@@ -126,10 +127,45 @@ public class HbaseTemplate implements HbaseOperations {
                     return mapper.mapRow(result, 0);
                 }
             });
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
+            LOGGER.error("HBase get fail", e);
+            return null;
         }
-        return null;
+    }
+
+    @Override
+    public <T> List<T> batchGet(List<String> rowIds, String table, String family, String qualifier, RowMapper<T> mapper) {
+        try {
+            final List<Get> gets = Lists.newArrayList();
+            for (String rowId : rowIds) {
+                Get get =  new Get(Bytes.toBytes(rowId));
+                if (StringUtils.isNotBlank(family)) {
+                    byte[] familyByte = Bytes.toBytes(family);
+                    if (StringUtils.isNotBlank(qualifier)) {
+                        get.addColumn(familyByte, Bytes.toBytes(qualifier));
+                    } else {
+                        get.addFamily(familyByte);
+                    }
+                }
+                gets.add(get);
+            }
+
+            return this.execute(table, new TableCallback<List<T>>() {
+                @Override
+                public List<T> doInTable(Table table) throws Throwable {
+                    final Result[] results = new Result[gets.size()];
+                    table.batch(gets, results);
+                    List<T> resultList = Lists.newArrayList();
+                    for (Result result : results) {
+                        resultList.add(mapper.mapRow(result, 0));
+                    }
+                    return resultList;
+                }
+            });
+        } catch (Throwable e) {
+            LOGGER.error("HBase batch get fail", e);
+            return null;
+        }
     }
 
     @Override

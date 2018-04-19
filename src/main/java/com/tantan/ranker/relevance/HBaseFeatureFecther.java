@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class HBaseFeatureFecther {
     private static final Logger LOGGER = LoggerFactory.getLogger(HBaseFeatureFecther.class);
@@ -25,22 +27,17 @@ public class HBaseFeatureFecther {
         return row;
     }
 
-    public Feature getHBaseFeature2(String sessionId) {
-        Feature row = hbaseTemplate.get(FEATURE_TABLE, sessionId, new FeatureRowMapper());
+    public Feature getFeature(String rowId) {
+        Feature row = hbaseTemplate.get(FEATURE_TABLE, rowId, new FeatureRowMapper());
         return row;
     }
 
-    public String getHBaseFeatureStr(String sessionId) {
-        return hbaseTemplate.get(FEATURE_TABLE, sessionId, new HBaseStringRowMapper());
+    public List<Feature> getFeatures(List<String> rowIds) {
+        return hbaseTemplate.batchGet(rowIds, FEATURE_TABLE, null, null, new FeatureRowMapper());
     }
 
-    public String getHBaseFeatureStr2(String sessionId) {
-        try {
-            HBaseFeature row = hbaseTemplate.get(FEATURE_TABLE, sessionId, new HBaseFeatureRowMapper());
-            return JsonMapper.writeObjectAsString(row);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+
+
+
+
 }

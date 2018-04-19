@@ -115,4 +115,16 @@ public interface HbaseOperations {
      * @param mutations
      */
     void saveOrUpdates(String tableName, List<Mutation> mutations);
+
+    /**
+     * 批量获取
+     * @param rowId
+     * @param table
+     * @param family
+     * @param qualifier
+     * @param mapper
+     * @param <T>
+     * @return
+     */
+    <T> List<T> batchGet(List<String> rowIds, String table, String family, String qualifier, final RowMapper<T> mapper);
 }

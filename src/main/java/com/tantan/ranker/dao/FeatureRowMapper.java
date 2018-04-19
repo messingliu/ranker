@@ -24,6 +24,9 @@ public class FeatureRowMapper implements RowMapper<Feature> {
 
     @Override
     public Feature mapRow(Result result, int rowNum) throws Exception {
+        if (result == null) {
+            return null;
+        }
         Feature feature = new Feature();
         feature.setAge(Integer.parseInt(Bytes.toString(result.getValue(COLUMNFAMILY, AGE))));
         feature.setGender(Bytes.toString(result.getValue(COLUMNFAMILY, GENDER)));
