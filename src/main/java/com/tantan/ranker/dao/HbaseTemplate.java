@@ -109,23 +109,27 @@ public class HbaseTemplate implements HbaseOperations {
 
     @Override
     public <T> T get(String tableName, final String rowName, final String familyName, final String qualifier, final RowMapper<T> mapper) {
-        return this.execute(tableName, new TableCallback<T>() {
-            @Override
-            public T doInTable(Table table) throws Throwable {
-                Get get = new Get(Bytes.toBytes(rowName));
-                if (StringUtils.isNotBlank(familyName)) {
-                    byte[] family = Bytes.toBytes(familyName);
-                    if (StringUtils.isNotBlank(qualifier)) {
-                        get.addColumn(family, Bytes.toBytes(qualifier));
+        try {
+            return this.execute(tableName, new TableCallback<T>() {
+                @Override
+                public T doInTable(Table table) throws Throwable {
+                    Get get = new Get(Bytes.toBytes(rowName));
+                    if (StringUtils.isNotBlank(familyName)) {
+                        byte[] family = Bytes.toBytes(familyName);
+                        if (StringUtils.isNotBlank(qualifier)) {
+                            get.addColumn(family, Bytes.toBytes(qualifier));
+                        } else {
+                            get.addFamily(family);
+                        }
                     }
-                    else {
-                        get.addFamily(family);
-                    }
+                    Result result = table.get(get);
+                    return mapper.mapRow(result, 0);
                 }
-                Result result = table.get(get);
-                return mapper.mapRow(result, 0);
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
