@@ -46,7 +46,7 @@ public class HBaseFeatureFecther {
         }
         Map<Long, Feature> map = Maps.newHashMap();
         for (Feature feature : getFeatures(rowIdList)) {
-            if (feature != null) {
+            if (feature != null && feature.getRowId() != null) {
                 map.put(Long.parseLong(feature.getRowId()), feature);
             }
         }
