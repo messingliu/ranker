@@ -9,13 +9,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tantan.avro.HBaseFeature;
 
 @RestController
+@RequestMapping("/test/")
 public class TestController {
     @Autowired
     private HBaseFeatureFecther hBaseFeatureFecther;
 
-    @RequestMapping(("/test"))
+    @RequestMapping(("/feature"))
     public HBaseFeature getFeature(@RequestParam(value="rowId")  String rowId) {
         return hBaseFeatureFecther.getHBaseFeature(rowId);
+    }
+
+    @RequestMapping(("/feature2"))
+    public String getFeature2(@RequestParam(value="rowId")  String rowId) {
+        return hBaseFeatureFecther.getHBaseFeatureStr(rowId);
     }
 
 }

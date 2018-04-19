@@ -2,6 +2,7 @@ package com.tantan.ranker.relevance;
 
 import com.tantan.avro.HBaseFeature;
 import com.tantan.ranker.dao.HBaseFeatureRowMapper;
+import com.tantan.ranker.dao.HBaseStringRowMapper;
 import com.tantan.ranker.dao.HbaseTemplate;
 import com.tantan.ranker.dao.RowMapper;
 import org.apache.hadoop.hbase.client.Result;
@@ -23,5 +24,9 @@ public class HBaseFeatureFecther {
     public HBaseFeature getHBaseFeature(String sessionId) {
         HBaseFeature row = hbaseTemplate.get(FEATURE_TABLE, sessionId, new HBaseFeatureRowMapper());
         return row;
+    }
+
+    public String getHBaseFeatureStr(String sessionId) {
+        return hbaseTemplate.get(FEATURE_TABLE, sessionId, new HBaseStringRowMapper());
     }
 }
