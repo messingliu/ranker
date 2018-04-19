@@ -1,7 +1,7 @@
 {
   "namespace": "com.tantan.avro",
   "type": "record",
-  "name": "HBaseFeatureOrigin",
+  "name": "HBaseFeature",
   "fields": [
     {"name": "device_os_name",  "type": "string"},
     {"name": "device_app_version", "type": "string"},
