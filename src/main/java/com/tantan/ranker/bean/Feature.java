@@ -1,6 +1,7 @@
 package com.tantan.ranker.bean;
 
 public class Feature {
+    private String rowId;
     private java.lang.String device_os_name;
     private java.lang.String device_app_version;
     private double rate_received_like_over_impression_latest_7_days;
@@ -23,6 +24,14 @@ public class Feature {
     private int city;
     private int is_vip;
     private java.lang.String spam_status;
+
+    public String getRowId() {
+        return rowId;
+    }
+
+    public void setRowId(String rowId) {
+        this.rowId = rowId;
+    }
 
     public String getDevice_os_name() {
         return device_os_name;

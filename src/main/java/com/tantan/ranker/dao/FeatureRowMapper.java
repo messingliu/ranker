@@ -28,6 +28,7 @@ public class FeatureRowMapper implements RowMapper<Feature> {
             return null;
         }
         Feature feature = new Feature();
+        feature.setRowId(Bytes.toString(result.getRow()));
         feature.setAge(Integer.parseInt(Bytes.toString(result.getValue(COLUMNFAMILY, AGE))));
         feature.setGender(Bytes.toString(result.getValue(COLUMNFAMILY, GENDER)));
         feature.setCity(Integer.parseInt(Bytes.toString(result.getValue(COLUMNFAMILY, CITY))));

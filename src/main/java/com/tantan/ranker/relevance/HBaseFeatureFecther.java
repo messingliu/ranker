@@ -1,5 +1,7 @@
 package com.tantan.ranker.relevance;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.tantan.avro.HBaseFeature;
 import com.tantan.ranker.bean.Feature;
 import com.tantan.ranker.dao.*;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class HBaseFeatureFecther {
@@ -34,6 +37,20 @@ public class HBaseFeatureFecther {
 
     public List<Feature> getFeatures(List<String> rowIds) {
         return hbaseTemplate.batchGet(rowIds, FEATURE_TABLE, null, null, new FeatureRowMapper());
+    }
+
+    public Map<Long, Feature> getUserFeatures(List<Long> rowIds) {
+        List<String> rowIdList = Lists.newArrayList();
+        for (Long rowId : rowIds) {
+            rowIdList.add(Long.toString(rowId));
+        }
+        Map<Long, Feature> map = Maps.newHashMap();
+        for (Feature feature : getFeatures(rowIdList)) {
+            if (feature != null) {
+                map.put(Long.parseLong(feature.getRowId()), feature);
+            }
+        }
+        return map;
     }
 
 
