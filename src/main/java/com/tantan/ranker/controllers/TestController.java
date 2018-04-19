@@ -1,5 +1,6 @@
 package com.tantan.ranker.controllers;
 
+import com.tantan.ranker.bean.Feature;
 import com.tantan.ranker.relevance.HBaseFeatureFecther;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +21,17 @@ public class TestController {
     }
 
     @RequestMapping(("/feature2"))
-    public String getFeature2(@RequestParam(value="rowId")  String rowId) {
-        return hBaseFeatureFecther.getHBaseFeatureStr(rowId);
+    public Feature getFeature2(@RequestParam(value="rowId")  String rowId) {
+        return hBaseFeatureFecther.getHBaseFeature2(rowId);
     }
 
     @RequestMapping(("/feature3"))
     public String getFeature3(@RequestParam(value="rowId")  String rowId) {
+        return hBaseFeatureFecther.getHBaseFeatureStr(rowId);
+    }
+
+    @RequestMapping(("/feature4"))
+    public String getFeature4(@RequestParam(value="rowId")  String rowId) {
         return hBaseFeatureFecther.getHBaseFeatureStr2(rowId);
     }
 

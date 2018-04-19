@@ -1,10 +1,8 @@
 package com.tantan.ranker.relevance;
 
 import com.tantan.avro.HBaseFeature;
-import com.tantan.ranker.dao.HBaseFeatureRowMapper;
-import com.tantan.ranker.dao.HBaseStringRowMapper;
-import com.tantan.ranker.dao.HbaseTemplate;
-import com.tantan.ranker.dao.RowMapper;
+import com.tantan.ranker.bean.Feature;
+import com.tantan.ranker.dao.*;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -24,6 +22,11 @@ public class HBaseFeatureFecther {
 
     public HBaseFeature getHBaseFeature(String sessionId) {
         HBaseFeature row = hbaseTemplate.get(FEATURE_TABLE, sessionId, new HBaseFeatureRowMapper());
+        return row;
+    }
+
+    public Feature getHBaseFeature2(String sessionId) {
+        Feature row = hbaseTemplate.get(FEATURE_TABLE, sessionId, new FeatureRowMapper());
         return row;
     }
 
