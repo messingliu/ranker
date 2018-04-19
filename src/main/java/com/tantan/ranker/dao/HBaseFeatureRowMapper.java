@@ -6,7 +6,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 public class HBaseFeatureRowMapper implements RowMapper<HBaseFeature> {
 
-    private static byte[] COLUMNFAMILY = "f".getBytes();
+    private static byte[] COLUMNFAMILY = "features".getBytes();
     private static byte[] NAME = "name".getBytes();
     private static byte[] AGE = "age".getBytes();
 
