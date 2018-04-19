@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
+
 import java.util.*;
 
 @Component
@@ -31,6 +32,9 @@ public class SuggestedUserRanker {
       scoredEntity.setSourceModel(String.valueOf(modelId));
       scoredEntityList.add(scoredEntity);
     }
+    LOGGER.info("Start calling mock HBase at: " + System.currentTimeMillis());
+    mockService();
+    LOGGER.info("End calling mock HBase at: " + System.currentTimeMillis());
     return rankSuggestedUsers(scoredEntityList, topK);
   }
 
@@ -79,5 +83,4 @@ public class SuggestedUserRanker {
     }
     return new FeatureVector<>(value, indexMap);
   }
-
 }
