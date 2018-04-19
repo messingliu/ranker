@@ -24,4 +24,9 @@ public class TestController {
         return hBaseFeatureFecther.getHBaseFeatureStr(rowId);
     }
 
+    @RequestMapping(("/feature3"))
+    public String getFeature3(@RequestParam(value="rowId")  String rowId) {
+        return hBaseFeatureFecther.getHBaseFeatureStr2(rowId);
+    }
+
 }
