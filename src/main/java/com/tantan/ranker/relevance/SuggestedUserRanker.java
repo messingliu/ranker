@@ -75,10 +75,10 @@ public class SuggestedUserRanker {
     indexMap.put(FeatureName.DISTANCE.name().toLowerCase(), 6);
     indexMap.put(FeatureName.SEARCH_MAX_AGE.name().toLowerCase(), 7);
     indexMap.put(FeatureName.SEARCH_MIN_AGE.name().toLowerCase(), 8);
-    Double[] value = new Double[7];
+    Double[] value = new Double[9];
     if (feature != null) {
       value[0] = (double)feature.getIs_vip();
-      value[1] = feature.getCount_like_giving_latest_7_days();
+      value[1] = feature.getCount_like_giving_latest_ß7_days();
       value[2] = feature.getCount_like_received_latest_7_days();
       value[3] = feature.getCount_match_latest_7_days();
       value[4] = feature.getCount_message_sent_latest_7_days();
