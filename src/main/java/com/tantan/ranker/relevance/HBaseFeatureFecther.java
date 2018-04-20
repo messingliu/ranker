@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tantan.avro.HBaseFeature;
 import com.tantan.ranker.bean.Feature;
+import com.tantan.ranker.constants.LogConstants;
 import com.tantan.ranker.dao.*;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
@@ -40,7 +41,8 @@ public class HBaseFeatureFecther {
     }
 
     public Map<Long, Feature> getUserFeatures(List<Long> rowIds) {
-        List<String> rowIdList = Lists.newArrayList();
+        long startTime = System.currentTimeMillis();
+        List < String > rowIdList = Lists.newArrayList();
         for (Long rowId : rowIds) {
             rowIdList.add(Long.toString(rowId));
         }
@@ -50,7 +52,11 @@ public class HBaseFeatureFecther {
                 map.put(Long.parseLong(feature.getRowId()), feature);
             }
         }
-        return getMockFeatures(rowIds);
+        long endTime = System.currentTimeMillis();
+        LOGGER.info("[{}: {}][{}: {}][{}: {}]", LogConstants.LOGO_TYPE, LogConstants.CLIENT_CALL,
+                LogConstants.CLIENT_NAME, LogConstants.MERGER, LogConstants.RESPONSE_TIME, endTime - startTime,
+                LogConstants.DATA_SIZE, rowIdList.size());
+      return getMockFeatures(rowIds);
     }
 
     public Map<Long, Feature> getMockFeatures(List<Long> rowIds) {
