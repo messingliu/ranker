@@ -86,6 +86,8 @@ public class SuggestedUserRanker {
       value[6] = (double)feature.getSearch_radius();
       value[7] = (double)feature.getSearch_max_age();
       value[8] = (double)feature.getSearch_min_age();
+    } else {
+      Arrays.fill(value, 0.0d);
     }
 
     return new FeatureVector<>(value, indexMap);
