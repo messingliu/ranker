@@ -50,11 +50,31 @@ public class HBaseFeatureFecther {
                 map.put(Long.parseLong(feature.getRowId()), feature);
             }
         }
-        return map;
+        return getMockFeatures(rowIds);
     }
 
-
-
-
-
+    public Map<Long, Feature> getMockFeatures(List<Long> rowIds) {
+        Map<Long, Feature> map = Maps.newHashMap();
+        for (Long id: rowIds ) {
+            Feature feature = new Feature();
+                feature.setRowId(rowIds.toString());
+                feature.setAge((int)(10*Math.random()));
+                feature.setGender("male");
+                feature.setCity((int)(10*Math.random()));
+                feature.setIs_vip((int)(10*Math.random()));
+                feature.setDevice_os_name("os");
+                feature.setDevice_app_version("version");
+                feature.setCount_like_giving_latest_7_days((10*Math.random()));
+                feature.setCount_like_received_latest_7_days((10*Math.random()));
+                feature.setCount_match_latest_7_days(10*Math.random());
+                feature.setRate_giving_like_over_impression_latest_7_days(10*Math.random());
+                feature.setRate_received_like_over_impression_latest_7_days(10*Math.random());
+                feature.setRate_match_over_impression_latest_7_days(10*Math.random());
+                feature.setMlc_type((int)(10*Math.random()));
+                feature.setConstellation((int)(10*Math.random()));
+                feature.setSpam_status("spam");
+            map.put(id, feature);
+        }
+        return map;
+    }
 }
