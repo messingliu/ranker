@@ -1,5 +1,6 @@
 package com.tantan.ranker.controllers;
 
+import com.google.common.collect.Lists;
 import com.tantan.ranker.relevance.HBaseFeatureFecther;
 import com.tantan.ranker.services.RankingService;
 import org.slf4j.Logger;
@@ -29,7 +30,8 @@ public class RankerController {
       return rankingService.getSuggestedUsers(id, candidateIds, modelId, linearModelParameter, topK);
     } catch (Exception e) {
       LOGGER.error("Ranker Error id=" + id + ", candidateIds=" + candidateIds, e);
-      throw e;
+      e.printStackTrace();
+      return Lists.newArrayList();
     }
   }
 
