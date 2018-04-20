@@ -37,6 +37,8 @@ public class SuggestedUserRanker {
       }
     }
     LOGGER.info("HBase search total=" + candidateIds.size() + ", hit=" + hit);
+    int hitRate = (int)(100.0 * hit / candidateIds.size());
+    LOGGER.info("[LogType: client] [ClientName: hbase] [DataSize: " + hitRate + "]");
     return rankSuggestedUsers(scoredEntityList, topK);
   }
 

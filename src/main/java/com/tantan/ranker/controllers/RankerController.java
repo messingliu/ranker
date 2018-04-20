@@ -24,8 +24,6 @@ public class RankerController {
                        @RequestParam(value="modelId") int modelId,
                        @RequestParam(value="linearModelParameter", defaultValue = "") String linearModelParameter) {
     try {
-      //User user = new User(counter.incrementAndGet(), 1, 2, 3, "here", "type");
-      //RankingService rankingService = new RankingServiceImpl();
       int topK = 25;
       return rankingService.getSuggestedUsers(id, candidateIds, modelId, linearModelParameter, topK);
     } catch (Exception e) {
