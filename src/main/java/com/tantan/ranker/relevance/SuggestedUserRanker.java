@@ -78,7 +78,7 @@ public class SuggestedUserRanker {
     Double[] value = new Double[9];
     if (feature != null) {
       value[0] = (double)feature.getIs_vip();
-      value[1] = feature.getCount_like_giving_latest_ß7_days();
+      value[1] = feature.getCount_like_giving_latest_7_days();
       value[2] = feature.getCount_like_received_latest_7_days();
       value[3] = feature.getCount_match_latest_7_days();
       value[4] = feature.getCount_message_sent_latest_7_days();
