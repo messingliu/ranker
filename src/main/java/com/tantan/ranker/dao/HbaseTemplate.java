@@ -154,11 +154,15 @@ public class HbaseTemplate implements HbaseOperations {
                 @Override
                 public List<T> doInTable(Table table) throws Throwable {
                     final Result[] results = new Result[gets.size()];
+                    long start = System.currentTimeMillis();
                     table.batch(gets, results);
+                    long end = System.currentTimeMillis();
                     List<T> resultList = Lists.newArrayList();
                     for (Result result : results) {
                         resultList.add(mapper.mapRow(result, 0));
                     }
+                    long end2 = System.currentTimeMillis();
+                    LOGGER.info("Raw Hbase Access Time: {} , Map Time: {}", end - start, end2 - end);
                     return resultList;
                 }
             });
