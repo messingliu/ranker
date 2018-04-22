@@ -24,7 +24,7 @@ public class SuggestedUserRanker {
   public List<Long> getSuggestedUsers(Long userId, List<Long> candidateIds, int modelId, String linearModelParameter, int topK) {
     SuggestedUserScorer suggestedUserScorer = new SuggestedUserScorer(modelId, linearModelParameter);
     List<ScoredEntity> scoredEntityList = new ArrayList<>();
-    Map<Long, Feature> features = hBaseFeatureFecther.getUserFeatures(candidateIds);
+    Map<Long, Feature> features = hBaseFeatureFecther.getUserFeatures(candidateIds.size() > 80 ? candidateIds.subList(0, 80) : candidateIds);
     int hit = 0;
     for (Long candidateId : candidateIds) {
       ScoredEntity scoredEntity = new ScoredEntity();
