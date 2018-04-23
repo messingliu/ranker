@@ -25,13 +25,20 @@ public class SuggestedUserRanker {
     SuggestedUserScorer suggestedUserScorer = new SuggestedUserScorer(modelId, linearModelParameter);
     List<ScoredEntity> scoredEntityList = new ArrayList<>();
     Map<Long, Feature> features = hBaseFeatureFecther.getUserFeatures(candidateIds);
+    int hit = 0;
     for (Long candidateId : candidateIds) {
       ScoredEntity scoredEntity = new ScoredEntity();
       scoredEntity.setId(candidateId);
       scoredEntity.setScore((float)suggestedUserScorer.score(getFeatureVectorForUser(features.get(candidateId))));
       scoredEntity.setSourceModel(String.valueOf(modelId));
       scoredEntityList.add(scoredEntity);
+      if (features.get(candidateId) != null) {
+        hit++;
+      }
     }
+    LOGGER.info("HBase search total=" + candidateIds.size() + ", hit=" + hit);
+    int hitRate = (int)(100.0 * hit / candidateIds.size());
+    LOGGER.info("[LogType: client] [ClientName: hbase] [DataSize: " + hitRate + "]");
     return rankSuggestedUsers(scoredEntityList, topK);
   }
 
@@ -59,7 +66,7 @@ public class SuggestedUserRanker {
     return suggestedUserList;
   }
 
-  public FeatureVector<Double> getFeatureVectorForUser(Feature feature) {
+  private FeatureVector<Double> getFeatureVectorForUser(Feature feature) {
     Map<String, Integer> indexMap = new HashMap<>();
     indexMap.put(FeatureName.IS_VIP.name().toLowerCase(), 0);
     indexMap.put(FeatureName.COUNT_LIKE_GIVE.name().toLowerCase(), 1);
@@ -68,7 +75,9 @@ public class SuggestedUserRanker {
     indexMap.put(FeatureName.COUNT_MESSAGE_SENT.name().toLowerCase(), 4);
     indexMap.put(FeatureName.AGE.name().toLowerCase(), 5);
     indexMap.put(FeatureName.DISTANCE.name().toLowerCase(), 6);
-    Double[] value = new Double[7];
+    indexMap.put(FeatureName.SEARCH_MAX_AGE.name().toLowerCase(), 7);
+    indexMap.put(FeatureName.SEARCH_MIN_AGE.name().toLowerCase(), 8);
+    Double[] value = new Double[9];
     if (feature != null) {
       value[0] = (double)feature.getIs_vip();
       value[1] = feature.getCount_like_giving_latest_7_days();
@@ -76,8 +85,14 @@ public class SuggestedUserRanker {
       value[3] = feature.getCount_match_latest_7_days();
       value[4] = feature.getCount_message_sent_latest_7_days();
       value[5] = 100.0 - feature.getAge();
-      value[6] = 0.0;
+      value[6] = (double)feature.getSearch_radius();
+      value[7] = (double)feature.getSearch_max_age();
+      value[8] = (double)feature.getSearch_min_age();
+    } else {
+      Arrays.fill(value, 0.0d);
     }
+
     return new FeatureVector<>(value, indexMap);
   }
+
 }

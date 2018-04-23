@@ -6,6 +6,7 @@ import com.tantan.avro.HBaseFeature;
 import com.tantan.ranker.bean.Feature;
 import com.tantan.ranker.constants.LogConstants;
 import com.tantan.ranker.dao.*;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -21,7 +22,8 @@ import java.util.Map;
 @Service
 public class HBaseFeatureFecther {
     private static final Logger LOGGER = LoggerFactory.getLogger(HBaseFeatureFecther.class);
-    public static final String FEATURE_TABLE = "user_features";
+    public static final String FEATURE_TABLE = "test_user_bucked_b";
+    private static final String ROW_KEY_PREFIX = "row_key_";
 
     @Autowired
     private HbaseTemplate hbaseTemplate;
@@ -44,19 +46,19 @@ public class HBaseFeatureFecther {
         long startTime = System.currentTimeMillis();
         List < String > rowIdList = Lists.newArrayList();
         for (Long rowId : rowIds) {
-            rowIdList.add(Long.toString(rowId));
+            rowIdList.add(ROW_KEY_PREFIX + Long.toString(rowId));
         }
         Map<Long, Feature> map = Maps.newHashMap();
         for (Feature feature : getFeatures(rowIdList)) {
-            if (feature != null && feature.getRowId() != null) {
-                map.put(Long.parseLong(feature.getRowId()), feature);
+            if (feature != null && feature.getRowId() != null && feature.getRowId().startsWith(ROW_KEY_PREFIX)) {
+                map.put(NumberUtils.toLong(feature.getRowId().substring(ROW_KEY_PREFIX.length())), feature);
             }
         }
         long endTime = System.currentTimeMillis();
         LOGGER.info("[{}: {}][{}: {}][{}: {}]", LogConstants.LOGO_TYPE, LogConstants.CLIENT_CALL,
                 LogConstants.CLIENT_NAME, LogConstants.MERGER, LogConstants.RESPONSE_TIME, endTime - startTime,
                 LogConstants.DATA_SIZE, rowIdList.size());
-      return getMockFeatures(rowIds);
+        return map;
     }
 
     public Map<Long, Feature> getMockFeatures(List<Long> rowIds) {

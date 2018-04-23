@@ -21,6 +21,8 @@ public class SuggestedUserScorer {
     DEFAULT_MODEL.put(FeatureName.COUNT_MESSAGE_SENT.name().toLowerCase(), 1.0);
     DEFAULT_MODEL.put(FeatureName.AGE.name().toLowerCase(), 0.2);
     DEFAULT_MODEL.put(FeatureName.DISTANCE.name().toLowerCase(), 1.0);
+    DEFAULT_MODEL.put(FeatureName.SEARCH_MAX_AGE.name().toLowerCase(), 1.0);
+    DEFAULT_MODEL.put(FeatureName.SEARCH_MIN_AGE.name().toLowerCase(), 1.0);
   }
 
   public SuggestedUserScorer(int modelId, String linearModelParameter) {

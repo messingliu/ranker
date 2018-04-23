@@ -7,5 +7,7 @@ public enum FeatureName {
   COUNT_LIKE_MATCH,
   COUNT_MESSAGE_SENT,
   AGE,
-  DISTANCE
+  DISTANCE,
+  SEARCH_MAX_AGE,
+  SEARCH_MIN_AGE
 }
