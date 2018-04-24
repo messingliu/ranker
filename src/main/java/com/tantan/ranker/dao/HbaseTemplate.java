@@ -15,6 +15,8 @@ import org.springframework.util.StopWatch;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -158,11 +160,13 @@ public class HbaseTemplate implements HbaseOperations {
                     table.batch(gets, results);
                     long end = System.currentTimeMillis();
                     List<T> resultList = Lists.newArrayList();
+                    int size = 0;
                     for (Result result : results) {
                         resultList.add(mapper.mapRow(result, 0));
+                        size += getRowSize(result, family);
                     }
                     long end2 = System.currentTimeMillis();
-                    LOGGER.info("Raw Hbase Access Time: {} , Map Time: {}", end - start, end2 - end);
+                    LOGGER.info("[LogType: client] [ClientName: hbase-rawTime] [ResponseTime: {}][DataSize: {}]", end - start, size);
                     return resultList;
                 }
             });
@@ -170,6 +174,23 @@ public class HbaseTemplate implements HbaseOperations {
             LOGGER.error("HBase batch get fail", e);
             return null;
         }
+    }
+
+    private int getRowSize(Result result, String family) {
+        if (result == null) {
+            return 0;
+        }
+        NavigableMap<byte[], byte[]> map = result.getFamilyMap(Bytes.toBytes(family));
+        if (map == null) {
+            return 0;
+        }
+        int size = 0;
+        for (Map.Entry<byte[], byte[]> entry : map.entrySet()) {
+            size += entry.getKey().length;
+            size += entry.getValue().length;
+        }
+
+        return size;
     }
 
     @Override
