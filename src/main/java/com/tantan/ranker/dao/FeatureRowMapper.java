@@ -1,13 +1,14 @@
 package com.tantan.ranker.dao;
 
 import com.tantan.ranker.bean.Feature;
+import com.tantan.ranker.relevance.HBaseFeatureFecther;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
 
 public class FeatureRowMapper implements RowMapper<Feature> {
-    private static byte[] COLUMNFAMILY = "f".getBytes();
+    private static byte[] COLUMNFAMILY = HBaseFeatureFecther.COLUMNFAMILY.getBytes();
     private static byte[] APP_VERSION = "device_app_version".getBytes();
     private static byte[] APP_OS = "device_os_name".getBytes();
     private static byte[] ISVIP = "is_vip".getBytes();

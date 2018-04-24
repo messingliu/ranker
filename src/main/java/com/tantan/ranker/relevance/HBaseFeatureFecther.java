@@ -22,8 +22,9 @@ import java.util.Map;
 @Service
 public class HBaseFeatureFecther {
     private static final Logger LOGGER = LoggerFactory.getLogger(HBaseFeatureFecther.class);
-    public static final String FEATURE_TABLE = "test_user_bucked_b";
+    private static final String FEATURE_TABLE = "test_user_bucked_b";
     private static final String ROW_KEY_PREFIX = "row_key_";
+    public static final String COLUMNFAMILY = "f";
 
     @Autowired
     private HbaseTemplate hbaseTemplate;
@@ -39,7 +40,7 @@ public class HBaseFeatureFecther {
     }
 
     public List<Feature> getFeatures(List<String> rowIds) {
-        return hbaseTemplate.batchGet(rowIds, FEATURE_TABLE, null, null, new FeatureRowMapper());
+        return hbaseTemplate.batchGet(rowIds, FEATURE_TABLE, COLUMNFAMILY, null, new FeatureRowMapper());
     }
 
     public Map<Long, Feature> getUserFeatures(List<Long> rowIds) {
