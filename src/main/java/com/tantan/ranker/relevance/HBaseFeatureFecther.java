@@ -1,5 +1,6 @@
 package com.tantan.ranker.relevance;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.tantan.avro.HBaseFeature;
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,7 @@ public class HBaseFeatureFecther {
     private static final String FEATURE_TABLE = "test_user_bucked_b";
     private static final String ROW_KEY_PREFIX = "row_key_";
     public static final String COLUMNFAMILY = "f";
+    public  static final boolean useMockHbase = false;
 
     @Autowired
     private HbaseTemplate hbaseTemplate;
@@ -44,22 +47,35 @@ public class HBaseFeatureFecther {
     }
 
     public Map<Long, Feature> getUserFeatures(List<Long> rowIds) {
-        long startTime = System.currentTimeMillis();
-        List < String > rowIdList = Lists.newArrayList();
-        for (Long rowId : rowIds) {
-            rowIdList.add(ROW_KEY_PREFIX + Long.toString(rowId));
-        }
-        Map<Long, Feature> map = Maps.newHashMap();
-        for (Feature feature : getFeatures(rowIdList)) {
-            if (feature != null && feature.getRowId() != null && feature.getRowId().startsWith(ROW_KEY_PREFIX)) {
-                map.put(NumberUtils.toLong(feature.getRowId().substring(ROW_KEY_PREFIX.length())), feature);
+        if (useMockHbase) {
+            long startTime = System.currentTimeMillis();
+            String url = null;
+            url = "http://10.189.100.43:8010/mockDelay?delay=100";
+            //Get from mockHbase
+            RestTemplate restTemplate = new RestTemplate();
+            String usersFromMerger = restTemplate.getForObject(url, String.class);
+            long endTime = System.currentTimeMillis();
+            LOGGER.info("[{}: {}][{}: {}]", LogConstants.LOGO_TYPE, LogConstants.CLIENT_CALL,
+                    LogConstants.CLIENT_NAME, LogConstants.MERGER, LogConstants.RESPONSE_TIME, endTime - startTime);
+            return getMockFeatures(rowIds);
+        } else {
+            long startTime = System.currentTimeMillis();
+            List<String> rowIdList = Lists.newArrayList();
+            for (Long rowId : rowIds) {
+                rowIdList.add(ROW_KEY_PREFIX + Long.toString(rowId));
             }
+            Map<Long, Feature> map = Maps.newHashMap();
+            for (Feature feature : getFeatures(rowIdList)) {
+                if (feature != null && feature.getRowId() != null && feature.getRowId().startsWith(ROW_KEY_PREFIX)) {
+                    map.put(NumberUtils.toLong(feature.getRowId().substring(ROW_KEY_PREFIX.length())), feature);
+                }
+            }
+            long endTime = System.currentTimeMillis();
+            LOGGER.info("[{}: {}][{}: {}][{}: {}][{}: {}]", LogConstants.LOGO_TYPE, LogConstants.CLIENT_CALL,
+                    LogConstants.CLIENT_NAME, LogConstants.RANKER, LogConstants.RESPONSE_TIME, endTime - startTime,
+                    LogConstants.DATA_SIZE, rowIdList.size());
+            return map;
         }
-        long endTime = System.currentTimeMillis();
-        LOGGER.info("[{}: {}][{}: {}][{}: {}][{}: {}]", LogConstants.LOGO_TYPE, LogConstants.CLIENT_CALL,
-                LogConstants.CLIENT_NAME, LogConstants.RANKER, LogConstants.RESPONSE_TIME, endTime - startTime,
-                LogConstants.DATA_SIZE, rowIdList.size());
-        return map;
     }
 
     public Map<Long, Feature> getMockFeatures(List<Long> rowIds) {
