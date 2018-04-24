@@ -55,8 +55,8 @@ public class HBaseFeatureFecther {
             RestTemplate restTemplate = new RestTemplate();
             String usersFromMerger = restTemplate.getForObject(url, String.class);
             long endTime = System.currentTimeMillis();
-            LOGGER.info("[{}: {}][{}: {}]", LogConstants.LOGO_TYPE, LogConstants.CLIENT_CALL,
-                    LogConstants.CLIENT_NAME, LogConstants.MERGER, LogConstants.RESPONSE_TIME, endTime - startTime);
+            LOGGER.info("[{}: {}][{}: {}][{}: {}]", LogConstants.LOGO_TYPE, LogConstants.CLIENT_CALL,
+                    LogConstants.CLIENT_NAME, LogConstants.RANKER, LogConstants.RESPONSE_TIME, endTime - startTime);
             return getMockFeatures(rowIds);
         } else {
             long startTime = System.currentTimeMillis();
