@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @Service
 public class HBaseFeatureFecther {
@@ -27,7 +28,7 @@ public class HBaseFeatureFecther {
     private static final String FEATURE_TABLE = "test_user_bucked_b";
     private static final String ROW_KEY_PREFIX = "row_key_";
     public static final String COLUMNFAMILY = "f";
-    public  static final boolean useMockHbase = false;
+    public  static final boolean useMockHbase = true;
 
     @Autowired
     private HbaseTemplate hbaseTemplate;
@@ -49,14 +50,15 @@ public class HBaseFeatureFecther {
     public Map<Long, Feature> getUserFeatures(List<Long> rowIds) {
         if (useMockHbase) {
             long startTime = System.currentTimeMillis();
-            String url = null;
-            url = "http://10.189.100.43:8010/mockDelay?delay=100";
-            //Get from mockHbase
-            RestTemplate restTemplate = new RestTemplate();
-            String usersFromMerger = restTemplate.getForObject(url, String.class);
+            Random random = new Random();
+            try {
+                Thread.sleep((long) (Math.max(0, Math.sqrt(250) * random.nextGaussian() + 100))); // Gaussian random delay
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             long endTime = System.currentTimeMillis();
             LOGGER.info("[{}: {}][{}: {}][{}: {}]", LogConstants.LOGO_TYPE, LogConstants.CLIENT_CALL,
-                    LogConstants.CLIENT_NAME, LogConstants.RANKER, LogConstants.RESPONSE_TIME, endTime - startTime);
+                    LogConstants.CLIENT_NAME, LogConstants.MOCK_HBASE, LogConstants.RESPONSE_TIME, endTime - startTime);
             return getMockFeatures(rowIds);
         } else {
             long startTime = System.currentTimeMillis();
