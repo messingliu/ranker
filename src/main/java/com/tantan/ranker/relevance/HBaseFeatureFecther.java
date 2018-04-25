@@ -56,7 +56,7 @@ public class HBaseFeatureFecther {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Map<Long, Feature> map = getMockFeatures(rowIds);
+            Map<Long, Feature> map = Maps.newHashMap();
             long endTime = System.currentTimeMillis();
             LOGGER.info("[{}: {}][{}: {}][{}: {}]", LogConstants.LOGO_TYPE, LogConstants.CLIENT_CALL,
                     LogConstants.CLIENT_NAME, LogConstants.MOCK_HBASE, LogConstants.RESPONSE_TIME, endTime - startTime);
