@@ -34,7 +34,7 @@ public class SuggestedUserScorer {
     double score = 0.0;
     for (String feature : v.getIndexMap().keySet()) {
       score += (Double)v.getElementData()[v.getIndexMap().get(feature.toLowerCase())] *
-          _model.getOrDefault(feature.toLowerCase(), 0.0);
+          _model.getOrDefault(feature.toLowerCase(), 1.234);
     }
     return score;
   }

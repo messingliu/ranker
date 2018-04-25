@@ -29,10 +29,9 @@ public class HbaseAutoConfiguration {
     @ConditionalOnMissingBean(HbaseTemplate.class)
     public HbaseTemplate hbaseTemplate() {
         Configuration configuration = HBaseConfiguration.create();
-        configuration.set(HBASE_QUORUM, "zk-1.static.bjs-datalake.p1staff.com:2181,zk-2.static.bjs-datalake.p1staff.com:2181,zk-3.static.bjs-datalake.p1staff.com:2181"); //this.hbaseProperties.getQuorum());
-        configuration.set(HBASE_ROOTDIR, "hdfs:/datalake/hbase/hbase-algo"); //hbaseProperties.getRootDir());
-        configuration.set(HBASE_ZNODE_PARENT, "/hbase-algo"); //hbaseProperties.getNodeParent());
-
+        configuration.set(HBASE_QUORUM, this.hbaseProperties.getQuorum());
+        configuration.set(HBASE_ROOTDIR, hbaseProperties.getRootDir());
+        configuration.set(HBASE_ZNODE_PARENT, hbaseProperties.getNodeParent());
         return new HbaseTemplate(configuration);
     }
 }
