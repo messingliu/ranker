@@ -31,7 +31,7 @@ public class SuggestedUserRanker {
   @Autowired
   private ConfigureService configureService;
 
-  public List<Long> getSuggestedUsers(Long userId, List<Long> candidateIds, int modelId, String linearModelParameter, int topK) {
+  public List<Long> getSuggestedUsersOld(Long userId, List<Long> candidateIds, int modelId, String linearModelParameter, int topK) {
     SuggestedUserScorer suggestedUserScorer = new SuggestedUserScorer(modelId, linearModelParameter);
     List<ScoredEntity> scoredEntityList = new ArrayList<>();
     Map<Long, Feature> features = hBaseFeatureFecther.getUserFeatures(candidateIds);
@@ -52,11 +52,34 @@ public class SuggestedUserRanker {
     return rankSuggestedUsers(scoredEntityList, topK);
   }
 
+  public List<Long> getSuggestedUsers(Long userId, List<Long> candidateIds, int modelId, String linearModelParameter, int topK) {
+    List<ScoredEntity> scoredEntityList = new ArrayList<>();
+    Map<Long, Feature> features = hBaseFeatureFecther.getUserFeatures(candidateIds);
+    for (Long candidateId : candidateIds) {
+      ScoredEntity scoredEntity = new ScoredEntity();
+      scoredEntity.setId(candidateId);
+      scoredEntity.setScore(mockScore());
+      scoredEntity.setSourceModel(String.valueOf(modelId));
+      scoredEntityList.add(scoredEntity);
+    }
+    return rankSuggestedUsers(scoredEntityList, topK);
+  }
+
+  public float mockScore() {
+    float score = 0;
+    int featureNum = configureService.getFeatureNum();
+    for (int i = 0; i < featureNum; i ++) {
+      score += Math.random() * Math.random();
+    }
+    return score;
+  }
+
   private List<Long> rankSuggestedUsers(List<ScoredEntity> scoredEntityList, int topK) {
     if (scoredEntityList == null) {
       return Collections.EMPTY_LIST;
     }
-    Collections.sort(scoredEntityList, new Comparator<ScoredEntity>() {
+    int size = Math.min(topK, scoredEntityList.size());
+    Queue<ScoredEntity> scorerPriorityQueue = new PriorityQueue<>(size, new Comparator<ScoredEntity>() {
       @Override
       public int compare(ScoredEntity a, ScoredEntity b) {
         if (a.getScore() == b.getScore()) {
@@ -68,10 +91,16 @@ public class SuggestedUserRanker {
         }
       }
     });
+
+    for (ScoredEntity scoredEntity : scoredEntityList) {
+      scorerPriorityQueue.add(scoredEntity);
+      if (scorerPriorityQueue.size() > size) {
+        scorerPriorityQueue.poll();
+      }
+    }
     List<Long> suggestedUserList = new ArrayList<>();
-    for (int i = 0; i < Math.min(topK, scoredEntityList.size()); i ++) {
-      LOGGER.info("suggestedUserList " + scoredEntityList.get(i).getId() + " " + scoredEntityList.get(i).getScore());
-      suggestedUserList.add(scoredEntityList.get(i).getId());
+    for (int i = 0; i < size; i ++) {
+      suggestedUserList.add(scorerPriorityQueue.poll().getId());
     }
     return suggestedUserList;
   }
