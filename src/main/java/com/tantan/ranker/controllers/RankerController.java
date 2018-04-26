@@ -1,6 +1,9 @@
 package com.tantan.ranker.controllers;
 
 import com.google.common.collect.Lists;
+import com.tantan.ranker.constants.LogConstants;
+import com.tantan.ranker.models.UserFeatures;
+import com.tantan.ranker.models.UserFeaturesList;
 import com.tantan.ranker.relevance.HBaseFeatureFecther;
 import com.tantan.ranker.services.RankingService;
 import org.slf4j.Logger;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,18 +23,38 @@ public class RankerController {
   private RankingService rankingService;
 
   @RequestMapping("/ranker")
-  public List<Long> suggestedUsers(@RequestParam(value="id") Long id,
+  public UserFeaturesList suggestedUsers(@RequestParam(value="id") Long id,
                        @RequestParam(value="candidateIds") List<Long> candidateIds,
                        @RequestParam(value="modelId") int modelId,
-                       @RequestParam(value="linearModelParameter", defaultValue = "") String linearModelParameter) {
+                       @RequestParam(value="linearModelParameter", defaultValue = "") String linearModelParameter,
+                       @RequestParam(value="topK", defaultValue = "25") int topK) {
     try {
-      int topK = 25;
-      return rankingService.getSuggestedUsers(id, candidateIds, modelId, linearModelParameter, topK);
+      long startTime = System.currentTimeMillis();
+      List<Long> userIdList= rankingService.getSuggestedUsers(id, candidateIds, modelId, linearModelParameter, topK);
+      UserFeaturesList userFeaturesList = getMockFeatureList(userIdList);
+      long endTime = System.currentTimeMillis();
+      LOGGER.info("[{}: {}][{}: {}][{}: {}]", LogConstants.LOGO_TYPE, LogConstants.CLIENT_CALL,
+              LogConstants.CLIENT_NAME, LogConstants.RANKER, LogConstants.RESPONSE_TIME, endTime - startTime);
+      return userFeaturesList;
     } catch (Exception e) {
       LOGGER.error("Ranker Error id=" + id + ", candidateIds=" + candidateIds, e);
-      e.printStackTrace();
-      return Lists.newArrayList();
+      return null;
     }
+  }
+
+  public UserFeaturesList getMockFeatureList(List<Long> topKUsers) {
+    int topK = topKUsers.size();
+    List<UserFeatures> userFeaturesList = new ArrayList<>();
+    for (int i = 0; i < topK; i ++) {
+      List<Float> feature = new ArrayList<>();
+      float randomFeature = (float)Math.random();
+      for (int j = 0; j < 100; j ++) {
+        feature.add(j, randomFeature);
+      }
+      UserFeatures userFeatures = new UserFeatures(topKUsers.get(i), feature);
+      userFeaturesList.add(i, userFeatures);
+    }
+    return new UserFeaturesList(userFeaturesList);
   }
 
 }

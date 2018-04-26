@@ -52,7 +52,7 @@ public class HBaseFeatureFecther {
             long startTime = System.currentTimeMillis();
             Random random = new Random();
             try {
-                Thread.sleep((long) (Math.max(0, Math.sqrt(250) * random.nextGaussian() + 100))); // Gaussian random delay
+                Thread.sleep((long) (Math.max(0, Math.sqrt(100) * random.nextGaussian() + 50))); // Gaussian random delay
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
