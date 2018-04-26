@@ -23,7 +23,7 @@ public class RankerController {
   private RankingService rankingService;
 
   @RequestMapping("/ranker")
-  public UserFeaturesList suggestedUsers(@RequestParam(value="id") Long id,
+  public List<UserFeatures> suggestedUsers(@RequestParam(value="id") Long id,
                        @RequestParam(value="candidateIds") List<Long> candidateIds,
                        @RequestParam(value="modelId") int modelId,
                        @RequestParam(value="linearModelParameter", defaultValue = "") String linearModelParameter,
@@ -31,7 +31,7 @@ public class RankerController {
     try {
       long startTime = System.currentTimeMillis();
       List<Long> userIdList= rankingService.getSuggestedUsers(id, candidateIds, modelId, linearModelParameter, topK);
-      UserFeaturesList userFeaturesList = getMockFeatureList(userIdList);
+      List<UserFeatures> userFeaturesList = getMockFeatureList(userIdList);
       long endTime = System.currentTimeMillis();
       LOGGER.info("[{}: {}][{}: {}][{}: {}]", LogConstants.LOGO_TYPE, LogConstants.CLIENT_CALL,
               LogConstants.CLIENT_NAME, LogConstants.RANKER, LogConstants.RESPONSE_TIME, endTime - startTime);
@@ -42,7 +42,7 @@ public class RankerController {
     }
   }
 
-  public UserFeaturesList getMockFeatureList(List<Long> topKUsers) {
+  public List<UserFeatures> getMockFeatureList(List<Long> topKUsers) {
     int topK = topKUsers.size();
     List<UserFeatures> userFeaturesList = new ArrayList<>();
     for (int i = 0; i < topK; i ++) {
@@ -54,7 +54,7 @@ public class RankerController {
       UserFeatures userFeatures = new UserFeatures(topKUsers.get(i), feature);
       userFeaturesList.add(i, userFeatures);
     }
-    return new UserFeaturesList(userFeaturesList);
+    return userFeaturesList;
   }
 
 }
