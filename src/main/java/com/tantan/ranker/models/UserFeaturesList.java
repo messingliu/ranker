@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class UserFeaturesList {
 
   private List<UserFeatures> userFeaturesList;
