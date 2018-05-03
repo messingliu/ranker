@@ -47,7 +47,7 @@ public class RankerController {
     List<UserFeatures> userFeaturesList = new ArrayList<>();
     for (int i = 0; i < topK; i ++) {
       List<Float> feature = new ArrayList<>();
-      float randomFeature = (float)((int)(Math.random()*100));
+      float randomFeature = 1.2f;
       for (int j = 0; j < 100; j ++) {
         feature.add(j, randomFeature);
       }

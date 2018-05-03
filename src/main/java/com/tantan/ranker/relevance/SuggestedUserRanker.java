@@ -67,7 +67,7 @@ public class SuggestedUserRanker {
 
   public float mockScore() {
     float score = 0;
-    double randomVal = Math.random();
+    double randomVal = 5;
     int featureNum = configureService.getFeatureNum();
     for (int i = 0; i < featureNum; i ++) {
       score += randomVal * randomVal;
