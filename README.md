@@ -10,6 +10,8 @@ http://localhost:8008/ranker?id=1&candidateIds=8,2,3,4&modelId=0&linearModelPara
 return
 [2,3,4,8]
 
+RPC version:
+port 6565
 
 Features are mocked data
 

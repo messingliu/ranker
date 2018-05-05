@@ -1,5 +1,7 @@
 package com.tantan.ranker.services;
 
+import com.tantan.ranker.models.UserFeatures;
+
 import java.util.List;
 
 
@@ -9,5 +11,5 @@ public interface RankingService {
    * @param id - user id
    * @return
    */
-  public List<Long> getSuggestedUsers(Long id, List<Long> candidateIds, int modelId, String linearModelParameter, int topK);
+  public List<UserFeatures> getSuggestedUsers(Long id, List<Long> candidateIds, int modelId, String linearModelParameter, int topK);
 }

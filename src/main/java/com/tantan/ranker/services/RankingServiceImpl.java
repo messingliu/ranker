@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,8 +25,26 @@ public class RankingServiceImpl implements RankingService {
    * @return
    */
   @Override
-  public List<Long> getSuggestedUsers(Long id, List<Long> candidateIds, int modelId, String linearModelParameter, int topK) {
+  public List<UserFeatures> getSuggestedUsers(Long id, List<Long> candidateIds, int modelId, String linearModelParameter, int topK) {
     List<Long> topKUsers = _suggestedUserRanker.getSuggestedUsers(id, candidateIds, modelId, linearModelParameter, topK);
-    return topKUsers;
+    List<UserFeatures> userFeaturesList = getMockFeatureList(topKUsers);
+
+    return userFeaturesList;
   }
+
+  public List<UserFeatures> getMockFeatureList(List<Long> topKUsers) {
+    int topK = topKUsers.size();
+    List<UserFeatures> userFeaturesList = new ArrayList<>();
+    for (int i = 0; i < topK; i ++) {
+      List<Float> feature = new ArrayList<>();
+      float randomFeature = 1.2f;
+      for (int j = 0; j < 100; j ++) {
+        feature.add(j, randomFeature);
+      }
+      UserFeatures userFeatures = new UserFeatures(topKUsers.get(i), feature);
+      userFeaturesList.add(i, userFeatures);
+    }
+    return userFeaturesList;
+  }
+
 }

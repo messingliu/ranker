@@ -30,8 +30,7 @@ public class RankerController {
                        @RequestParam(value="topK", defaultValue = "25") int topK) {
     try {
       long startTime = System.currentTimeMillis();
-      List<Long> userIdList= rankingService.getSuggestedUsers(id, candidateIds, modelId, linearModelParameter, topK);
-      List<UserFeatures> userFeaturesList = getMockFeatureList(userIdList);
+      List<UserFeatures> userFeaturesList = rankingService.getSuggestedUsers(id, candidateIds, modelId, linearModelParameter, topK);
       long endTime = System.currentTimeMillis();
       LOGGER.info("[{}: {}][{}: {}][{}: {}]", LogConstants.LOGO_TYPE, LogConstants.CLIENT_CALL,
               LogConstants.CLIENT_NAME, LogConstants.RANKER, LogConstants.RESPONSE_TIME, endTime - startTime);
@@ -41,20 +40,4 @@ public class RankerController {
       return null;
     }
   }
-
-  public List<UserFeatures> getMockFeatureList(List<Long> topKUsers) {
-    int topK = topKUsers.size();
-    List<UserFeatures> userFeaturesList = new ArrayList<>();
-    for (int i = 0; i < topK; i ++) {
-      List<Float> feature = new ArrayList<>();
-      float randomFeature = 1.2f;
-      for (int j = 0; j < 100; j ++) {
-        feature.add(j, randomFeature);
-      }
-      UserFeatures userFeatures = new UserFeatures(topKUsers.get(i), feature);
-      userFeaturesList.add(i, userFeatures);
-    }
-    return userFeaturesList;
-  }
-
 }
