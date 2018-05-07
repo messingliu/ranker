@@ -11,5 +11,5 @@ public interface RankingService {
    * @param id - user id
    * @return
    */
-  public List<UserFeatures> getSuggestedUsers(Long id, List<Long> candidateIds, int modelId, String linearModelParameter, int topK);
+  public List<UserFeatures> getSuggestedUsers(Long id, List<Long> candidateIds, String modelId, String linearModelParameter, int topK);
 }

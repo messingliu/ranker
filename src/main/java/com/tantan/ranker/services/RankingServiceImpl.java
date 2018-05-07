@@ -25,7 +25,7 @@ public class RankingServiceImpl implements RankingService {
    * @return
    */
   @Override
-  public List<UserFeatures> getSuggestedUsers(Long id, List<Long> candidateIds, int modelId, String linearModelParameter, int topK) {
+  public List<UserFeatures> getSuggestedUsers(Long id, List<Long> candidateIds, String modelId, String linearModelParameter, int topK) {
     List<Long> topKUsers = _suggestedUserRanker.getSuggestedUsers(id, candidateIds, modelId, linearModelParameter, topK);
     List<UserFeatures> userFeaturesList = getMockFeatureList(topKUsers);
 

@@ -30,7 +30,7 @@ public class RankerController {
                        @RequestParam(value="topK", defaultValue = "25") int topK) {
     try {
       long startTime = System.currentTimeMillis();
-      List<UserFeatures> userFeaturesList = rankingService.getSuggestedUsers(id, candidateIds, modelId, linearModelParameter, topK);
+      List<UserFeatures> userFeaturesList = rankingService.getSuggestedUsers(id, candidateIds, "", linearModelParameter, topK);
       long endTime = System.currentTimeMillis();
       LOGGER.info("[{}: {}][{}: {}][{}: {}]", LogConstants.LOGO_TYPE, LogConstants.CLIENT_CALL,
               LogConstants.CLIENT_NAME, LogConstants.RANKER, LogConstants.RESPONSE_TIME, endTime - startTime);

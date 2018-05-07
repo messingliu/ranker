@@ -52,14 +52,14 @@ public class SuggestedUserRanker {
     return rankSuggestedUsers(scoredEntityList, topK);
   }
 
-  public List<Long> getSuggestedUsers(Long userId, List<Long> candidateIds, int modelId, String linearModelParameter, int topK) {
+  public List<Long> getSuggestedUsers(Long userId, List<Long> candidateIds, String modelId, String linearModelParameter, int topK) {
     List<ScoredEntity> scoredEntityList = new ArrayList<>();
     Map<Long, Feature> features = hBaseFeatureFecther.getUserFeatures(candidateIds);
     for (Long candidateId : candidateIds) {
       ScoredEntity scoredEntity = new ScoredEntity();
       scoredEntity.setId(candidateId);
       scoredEntity.setScore(mockScore());
-      scoredEntity.setSourceModel(String.valueOf(modelId));
+      scoredEntity.setSourceModel(modelId);
       scoredEntityList.add(scoredEntity);
     }
     return rankSuggestedUsers(scoredEntityList, topK);
